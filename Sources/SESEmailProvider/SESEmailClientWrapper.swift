@@ -16,9 +16,9 @@ struct SESEmailClientWrapper: EmailClient {
     func send(_ messages: [EmailMessage]) -> EventLoopFuture<Void> {
         messages.map { message in
             let destination = SES.Destination(
-                bccAddresses: message.bcc?.map(\.email),
-                ccAddresses: message.cc?.map(\.email),
-                toAddresses: message.to.map(\.email))
+                bccAddresses: message.bcc?.map(\.description),
+                ccAddresses: message.cc?.map(\.description),
+                toAddresses: message.to.map(\.description))
             
             var htmlContent: SES.Content? = nil
             var textContent: SES.Content? = nil
@@ -38,7 +38,7 @@ struct SESEmailClientWrapper: EmailClient {
                 replyTo = [_replyTo.email]
             }
             
-            let request = SES.SendEmailRequest(destination: destination, message: SESMessage, replyToAddresses: replyTo, source: message.from.email)
+            let request = SES.SendEmailRequest(destination: destination, message: SESMessage, replyToAddresses: replyTo, source: message.from.description)
             return ses.sendEmail(request, logger: self.logger, on: eventLoop)
                 .transform(to: ())
         }
