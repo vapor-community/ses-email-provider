@@ -20,22 +20,16 @@ struct SESEmailClientWrapper: EmailClient {
                 ccAddresses: message.cc?.map(\.email),
                 toAddresses: message.to.map(\.email))
             
-            let htmlContent = message.contents.compactMap { content -> String? in
-                guard case let .html(html) = content else { return nil }
-                return html
-            }
-            .first
+            var htmlContent: SES.Content? = nil
+            var textContent: SES.Content? = nil
             
-            let textContent = message.contents.compactMap { content -> String? in
-                guard case let .text(text) = content else { return nil }
-                return text
-            }
-            .first
+            if let html = message.content.html { htmlContent = .init(data: html) }
+            if let text = message.content.text { textContent = .init(data: text) }
             
             let SESMessage = SES.Message(
                 body: .init(
-                    html: htmlContent != nil ? SES.Content(data: htmlContent!) : nil,
-                    text: textContent != nil ? SES.Content(data: textContent!) : nil
+                    html: htmlContent,
+                    text: textContent
                 ),
                 subject: .init(data: message.subject))
             
