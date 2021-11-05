@@ -2,18 +2,18 @@ import Foundation
 import Email
 import SotoSES
 
-struct SESEmailClientWrapper: EmailClient {
+public struct SESEmailClientWrapper: EmailClient {
     private let eventLoop: EventLoop
     private let logger: Logger
     private let ses: SES
     
-    init(ses: SES, eventLoop: EventLoop, logger: Logger) {
+    public init(ses: SES, eventLoop: EventLoop, logger: Logger) {
         self.ses = ses
         self.eventLoop = eventLoop
         self.logger = logger
     }
     
-    func send(_ messages: [EmailMessage]) -> EventLoopFuture<Void> {
+    public func send(_ messages: [EmailMessage]) -> EventLoopFuture<Void> {
         messages.map { message in
             let destination = SES.Destination(
                 bccAddresses: message.bcc?.map(\.fullAddress),
@@ -59,7 +59,7 @@ struct SESEmailClientWrapper: EmailClient {
         .flatten(on: eventLoop)
     }
     
-    func delegating(to eventLoop: EventLoop) -> SESEmailClientWrapper {
+    public func delegating(to eventLoop: EventLoop) -> SESEmailClientWrapper {
         SESEmailClientWrapper(ses: self.ses, eventLoop: eventLoop, logger: self.logger)
     }
 }
