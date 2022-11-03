@@ -1,17 +1,17 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.6
 import PackageDescription
 
 let package = Package(
     name: "ses-email-provider",
     platforms: [
-        .macOS(.v10_15)
+        .macOS(.v12)
     ],
     products: [
         .library(name: "SESEmailProvider", targets: ["SESEmailProvider"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/vapor/email.git", .branch("api")),
-        .package(url: "https://github.com/soto-project/soto.git", from: "5.0.0"),
+        .package(url: "https://github.com/vapor/email.git", branch: "api"),
+        .package(url: "https://github.com/soto-project/soto.git", from: "6.0.0"),
     ],
     targets: [
         .target(
